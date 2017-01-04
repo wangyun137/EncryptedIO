@@ -70,7 +70,7 @@ int EncryptFile::pwrite(const void *buf, int size, long offset) {
 
 bool EncryptFile::fstat(struct stat *st) {
     bool result = (rawFstat(mFd_, st) == 0);
-    if (result && mHead_->isEncrypted) {
+    if (LIKELY(result && mHead_->isEncrypted)) {
         st->st_size = mHead_->getFileSize();
     }
     return result;
@@ -78,14 +78,6 @@ bool EncryptFile::fstat(struct stat *st) {
 
 void* EncryptFile::mmap(void *address, int size, int prot, int flags, long offset) {
     return LIKELY(mData_ != NULL) ? mData_->mmap(address, size, prot, flags, offset) : NULL;
-}
-
-bool EncryptFile::munmap(void *address, int size) {
-    return LIKELY(mData_ != NULL) ? mData_->munmap(address, size) : false;
-}
-
-bool EncryptFile::ioctl(int cmd, void* args) {
-    return rawIoctl(mFd_, cmd, args);
 }
 
 int64_t EncryptFile::lseek(int64_t offset, int32_t whence) {

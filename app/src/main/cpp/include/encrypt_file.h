@@ -69,10 +69,6 @@ public:
 
     void* mmap(void *address, int size, int prot, int flags, long offset);
 
-    bool munmap(void *address, int size);
-
-    int ioctl(int cmd, void *args);
-
     int64_t lseek(int64_t offset, int32_t whence);
 
 

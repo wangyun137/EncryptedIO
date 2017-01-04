@@ -65,7 +65,7 @@ int32_t rawLseek(int fd, int32_t offset, int32_t whence) {
 }
 
 int64_t rawLseek64(int fd, int64_t offset, int32_t whence) {
-    return lseek64();
+    return lseek64(fd, offset, whence);
 }
 
 int rawRename(const char *old_name, const char *new_name) {

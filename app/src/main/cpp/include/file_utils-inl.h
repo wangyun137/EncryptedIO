@@ -34,20 +34,20 @@ inline int setReadWrite(int flags) {
 }
 
 inline int setReadOnly(int flags) {
-    if (isWriteOnly) {
+    if (isWriteOnly(flags)) {
         return (flags & ~O_WRONLY) | O_RDONLY;
     }
-    if (isReadWrite) {
+    if (isReadWrite(flags)) {
         return (flags & ~O_RDWR) | O_RDONLY;
     }
     return flags;
 }
 
 inline int setWriteOnly(int flags) {
-    if (isReadOnly) {
+    if (isReadOnly(flags)) {
         return (flags & ~O_RDONLY) | O_WRONLY;
     }
-    if (isReadWrite) {
+    if (isReadWrite(flags)) {
         return (flags & ~O_RDWR) | O_RDONLY;
     }
     return flags;

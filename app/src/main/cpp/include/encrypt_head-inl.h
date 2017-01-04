@@ -7,18 +7,19 @@
 */
 
 #include "encrypt_head.h"
+#include "marcros.h"
 
 namespace io {
 
 inline void EncryptHead::clear() {
-  if (mHead_ != NULL) {
+  if (LIKELY(mHead_ != NULL)) {
       free(mHead_)
   }
   mHead_ = NULL;
 }
 
 inline void setFileSizeInHead(long size) {
-    if (mHead_ != NULL) mHead_->fileSize = size;
+    if (LIKELY(mHead_ != NULL)) mHead_->fileSize = size;
 }
 
 } // namespace io

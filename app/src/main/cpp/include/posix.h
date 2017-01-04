@@ -32,11 +32,7 @@ int rawIoctl(int fd, int cmd, void *arg);
 
 int rawFtruncate(int fd, off_t offset);
 
-int rawFtruncate64(int fd, off_t offset);
-
 int32_t rawLseek(int fd, int32_t offset, int32_t whence);
-
-int64_t rawLseek64(int fd, int64_t offset, int32_t whence);
 
 int rawRename(const char *old_name, const char *new_name);
 

@@ -46,7 +46,6 @@ void EncryptHead::readHead() {
     rawLseek(mFile_->getFd(), 0, SEEK_SET);
 
     mEncrypted_ = validateFileHead(headBuff);
-
 }
 
 void EncryptHead::createHead() {

@@ -6,19 +6,20 @@
 * LastUpdateBy: wangyun
 */
 #include "encrypt_file.h"
+#include "marcos.h"
 
 namespace io {
 
 inline off_t getRealPos() const {
-    return mData_ == NULL ? 0 : mData_->getRealPos();
+    return LIKELY(mData_ != NULL) ? mData_->getRealPos() : 0;
 }
 
 inline int getHeadSize() const {
-    return mHead_ == NULL ? 0 : mHead_->getHeadSize;
+    return LIKELY(mHead_ != NULL) ? mHead_->getHeadSize : 0;
 }
 
 inline bool isEncrypted() const {
-    return mHead_ == NULL ? 0 : mHead_->isEncrypted();
+    return LIKELY(mHead_ != NULL) ? mHead_->isEncrypted() : 0;
 }
 
 }
