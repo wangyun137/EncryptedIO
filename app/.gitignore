@@ -1,1 +1,7 @@
 /build
+/CMakeFiles
+.externalNativeBuild
+cmake_install.cmake
+CmakeCache.txt
+Makefile
+.idea/dictionaries/wangyun.xml
