@@ -19,14 +19,20 @@ public:
 
     ~IO(){}
 
-    void onLoad(JavaVM* vm, JNIEnv* env, void* reserved);
+    void onLoad(JNIEnv* env);
 
     static const char* getEncryptKey();
 
     static void setEncryptKey(const char* key);
 
+    static jstring getJavaKey();
+
+    static void setJavaKey(jstring key);
+
 private:
     static const char* gEncryptKey_;
+
+    static jstring gJavaKey_;
 };// class io
 
 } // namespace io

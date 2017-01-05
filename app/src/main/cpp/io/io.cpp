@@ -9,6 +9,8 @@
 #include "io.h"
 #include "encrypt_posix.h"
 #include "jni_native.h"
+#include "io_application.h"
+#include "crypto_helper.h"
 
 using io::EncryptPosix;
 
@@ -26,12 +28,25 @@ static JNINativeMethod gPosixMethods[] = {
     CPP_NATIVE_METHOD(lseek,      "(Ljava/io/FileDescriptor;JI)J",                         EncryptPosix::lseek)
 };
 
+static void registerPosixMethods(JNIEnv* env) {
+    char sdkVersion[10];
+    int version;
+    GET_SDK_VERSION(sdkVersion, version);
+
+    if (version >= 21) {
+        registerNativeMethods(env, "libcore/io/Posix",
+            gPosixMethods, sizeof(gPosixMethods) / sizeof(gPosixMethods[0]));
+    }
+}
+
 namespace io {
 
 const char* IO::gEncryptKey_ = NULL;
 
-void IO::onLoad(JavaVM* vm, JNIEnv* env, void* reserved) {
-
+void IO::onLoad(JNIEnv* env) {
+    registerPosixMethods(env);
+    IOApplication::registerApplicationMethod(env);
+    CryptoHelper::registerCryptoHelperMethods(env);
 }
 
 void IO::setEncryptKey(const char* key) {
@@ -42,6 +57,14 @@ const char* IO::getEncryptKey() {
     return gEncryptKey_;
 }
 
+jstring IO::getJavaKey() {
+    return gJavaKey_;
+}
+
+void IO::setJavaKey(jstring key) {
+    gJavaKey_ = key;
+}
+
 } // end namespace io
 
 
@@ -49,10 +72,22 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     JNIEnv* env = NULL;
     jint version = vm->GetEnv((void **)&env, JNI_VERSION_1_6);
 
-    //TODO:find encrypt key and set it
+    jclass appClass = env->FindClass("com.singuloid.encrypt.IOApplication");
+    if (env->ExceptionCheck()) {
+        env->ExceptionClear();
+        env->ThrowNew(env->FindClass("java/lang/ClassNotFoundException"),
+            "can not find com.singuloid.encrypt.IOApplication");
+    }
+    static jfieldID keyId = env->GetStaticFieldID(appClass, "sEncryptKey", "Ljava/lang/String;");
+    jstring javaKey = (jstring)env->GetStaticObjectField(appClass, keyId);
+    //TODO:when release the resource
+    const char* encryptKey = env->GetStringUTFChars(javaKey, 0);
+
+    io::IO::setJavaKey(javaKey);
+    io::IO::setEncryptKey(encryptKey);
 
     io::IO* io = new io::IO;
-    io->onLoad(vm, env, reserved);
+    io->onLoad(env);
     delete io;
 
     return version;

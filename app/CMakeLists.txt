@@ -22,7 +22,9 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/src/main/cpp/crypto CRYPTO_SRCS)
 add_library(aes-crypto
             STATIC
             ${CRYPTO_SRCS})
-# target_link_libraries(aes-crypto)
+
+target_link_libraries(aes-crypto openssl-crypto)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/external/include
                     ${CMAKE_SOURCE_DIR}/src/main/cpp/io/include
                     ${CMAKE_SOURCE_DIR}/src/main/cpp/crypto/include)
@@ -46,7 +48,11 @@ add_library(io
 find_library(log-lib
              log)
 
-target_link_libraries(io aes-crypto ${log-lib})
+target_link_libraries( io
+                       aes-crypto
+                       ${log-lib}
+                       jni-native-helper)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/io/include
                     ${CMAKE_SOURCE_DIR}/src/main/cpp/crypto/include)
 
