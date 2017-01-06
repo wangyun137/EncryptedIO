@@ -41,7 +41,7 @@ static void registerPosixMethods(JNIEnv* env) {
 
 namespace io {
 
-const char* IO::gEncryptKey_ = NULL;
+string IO::gEncryptKey_ = NULL;
 
 void IO::onLoad(JNIEnv* env) {
     registerPosixMethods(env);
@@ -49,20 +49,12 @@ void IO::onLoad(JNIEnv* env) {
     CryptoHelper::registerCryptoHelperMethods(env);
 }
 
-void IO::setEncryptKey(const char* key) {
+void IO::setEncryptKey(string key) {
     gEncryptKey_ = key;
 }
 
-const char* IO::getEncryptKey() {
+string IO::getEncryptKey() {
     return gEncryptKey_;
-}
-
-jstring IO::getJavaKey() {
-    return gJavaKey_;
-}
-
-void IO::setJavaKey(jstring key) {
-    gJavaKey_ = key;
 }
 
 } // end namespace io
@@ -81,9 +73,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     static jfieldID keyId = env->GetStaticFieldID(appClass, "sEncryptKey", "Ljava/lang/String;");
     jstring javaKey = (jstring)env->GetStaticObjectField(appClass, keyId);
     //TODO:when release the resource
-    const char* encryptKey = env->GetStringUTFChars(javaKey, 0);
+    const char* encryptKeyChar = env->GetStringUTFChars(javaKey, 0);
+    string encryptKey = string(encryptKeyChar);
+    env->ReleaseStringUTFChars(javaKey, encryptKeyChar);
 
-    io::IO::setJavaKey(javaKey);
     io::IO::setEncryptKey(encryptKey);
 
     io::IO* io = new io::IO;

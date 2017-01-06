@@ -10,14 +10,16 @@
 #include "io.h"
 #include "jni_native.h"
 
+#include <string>
+
+using std::string;
+
 namespace io {
 
 void IOApplication::switchKey(JNIEnv* env, jclass, jstring newKey) {
-    const char* newEncryptKey = env->GetStringUTFChars(newKey, 0);
-    jstring oldJavaKey = IO::getJavaKey();
-    const char* oldEncryptKey = IO::getEncryptKey();
-    env->ReleaseStringUTFChars(oldJavaKey, oldEncryptKey);
-    IO::setJavaKey(newKey);
+    const char* newEncryptKeyChar = env->GetStringUTFChars(newKey, 0);
+    string newEncryptKey = string(newEncryptKey);
+    env->ReleaseStringUTFChars(newKey, newEncryptKeyChar);
     IO::setEncryptKey(newEncryptKey);
 }
 

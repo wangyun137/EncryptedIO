@@ -15,7 +15,7 @@ bool Aes::initKey(Key* key) {
     if (key == NULL) {
         return false;
     }
-    const char* ioKey = io::IO::getEncryptKey();
+    const char* ioKey = io::IO::getEncryptKey().c_str();
     int i;
     if (ioKey != NULL) {
         for (i = 0; i < SINGLE_BLOCK_SIZE; i++) {

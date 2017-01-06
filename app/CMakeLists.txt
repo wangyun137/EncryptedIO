@@ -24,6 +24,7 @@ add_library(aes-crypto
             ${CRYPTO_SRCS})
 
 target_link_libraries(aes-crypto openssl-crypto)
+add_dependencies(aes-crypto openssl-crypto)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/external/include
                     ${CMAKE_SOURCE_DIR}/src/main/cpp/io/include
@@ -51,7 +52,8 @@ find_library(log-lib
 target_link_libraries( io
                        aes-crypto
                        ${log-lib}
-                       jni-native-helper)
+                       )
+
 
 include_directories(${CMAKE_SOURCE_DIR}/src/main/cpp/io/include
                     ${CMAKE_SOURCE_DIR}/src/main/cpp/crypto/include)

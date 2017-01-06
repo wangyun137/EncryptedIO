@@ -9,6 +9,9 @@
 #define ENCRYPTED_IO_H
 
 #include <jni.h>
+#include <string>
+
+using std::string;
 
 namespace io {
 
@@ -21,18 +24,12 @@ public:
 
     void onLoad(JNIEnv* env);
 
-    static const char* getEncryptKey();
+    static string getEncryptKey();
 
-    static void setEncryptKey(const char* key);
-
-    static jstring getJavaKey();
-
-    static void setJavaKey(jstring key);
+    static void setEncryptKey(string key);
 
 private:
-    static const char* gEncryptKey_;
-
-    static jstring gJavaKey_;
+    static string gEncryptKey_;
 };// class io
 
 } // namespace io
